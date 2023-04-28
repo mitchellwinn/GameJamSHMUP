@@ -1,0 +1,100 @@
+[gd_scene load_steps=9 format=3 uid="uid://mfmisl7mwl5i"]
+
+[ext_resource type="Texture2D" uid="uid://cf7jfdbhjpxbs" path="res://Sprites/girl1-Sheet.png" id="1_mmoas"]
+[ext_resource type="Script" path="res://Scripts/CharMain.gd" id="1_pmppb"]
+[ext_resource type="Texture2D" uid="uid://byadhxet3s0lo" path="res://Sprites/earthmab.jpg" id="2_25rx2"]
+[ext_resource type="Script" path="res://Planet.gd" id="3_k8okg"]
+[ext_resource type="Texture2D" uid="uid://bocfxax215324" path="res://Sprites/Hubble_ultra_deep_field.png" id="4_avtk6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pur2c"]
+size = Vector2(5, 14)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_3kxj7"]
+viewport_path = NodePath("Node3D/SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pcp0o"]
+shading_mode = 2
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+albedo_color = Color(0, 0.733333, 0.580392, 0.47451)
+albedo_texture = ExtResource("2_25rx2")
+emission_enabled = true
+emission_energy_multiplier = 1.17
+emission_texture = ExtResource("2_25rx2")
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(97, 63)
+motion_mode = 1
+script = ExtResource("1_pmppb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(-0.5, 1)
+shape = SubResource("RectangleShape2D_pur2c")
+metadata/_edit_lock_ = true
+
+[node name="Girl" type="Sprite2D" parent="CharacterBody2D"]
+texture_filter = 1
+texture = ExtResource("1_mmoas")
+hframes = 8
+vframes = 4
+frame = 25
+metadata/_edit_lock_ = true
+
+[node name="Pack" type="Sprite2D" parent="CharacterBody2D"]
+z_index = -4
+texture_filter = 1
+texture = ExtResource("1_mmoas")
+hframes = 8
+vframes = 4
+metadata/_edit_lock_ = true
+
+[node name="Gun" type="Sprite2D" parent="CharacterBody2D"]
+z_index = -2
+texture_filter = 1
+texture = ExtResource("1_mmoas")
+hframes = 8
+vframes = 4
+frame = 16
+metadata/_edit_lock_ = true
+
+[node name="Hands" type="Sprite2D" parent="CharacterBody2D"]
+z_index = -3
+texture_filter = 1
+texture = ExtResource("1_mmoas")
+hframes = 8
+vframes = 4
+frame = 8
+metadata/_edit_lock_ = true
+
+[node name="BG" type="Sprite2D" parent="."]
+z_index = -99
+texture_filter = 1
+position = Vector2(216, 121.5)
+texture = SubResource("ViewportTexture_3kxj7")
+
+[node name="Node3D" type="CSGSphere3D" parent="."]
+transform = Transform3D(1.22279, -0.441341, 0, 0.441341, 1.22279, 0, 0, 0, 1.3, -2.18911, -0.144045, -1.37329)
+lod_bias = 0.001
+material = SubResource("StandardMaterial3D_pcp0o")
+script = ExtResource("3_k8okg")
+
+[node name="SubViewport" type="SubViewport" parent="Node3D"]
+size = Vector2i(432, 243)
+
+[node name="Camera3D" type="Camera3D" parent="Node3D/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.33969)
+projection = 1
+fov = 78.2
+size = 3.514
+frustum_offset = Vector2(-0.013, 0)
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 0, 0, -7.04318)
+flip_h = true
+flip_v = true
+modulate = Color(0.466667, 0.329412, 0.486275, 1)
+billboard = 1
+texture_filter = 0
+texture = ExtResource("4_avtk6")
