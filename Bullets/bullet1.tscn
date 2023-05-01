@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcbmpryusl6di"]
+
+[ext_resource type="Script" path="res://Bullets/PlayerBullet.gd" id="1_31bje"]
+[ext_resource type="Texture2D" uid="uid://cbyyymgy6bwqb" path="res://Sprites/shot1.png" id="2_sp1qs"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_31bje")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 5
+texture_filter = 1
+texture = ExtResource("2_sp1qs")
+hframes = 6

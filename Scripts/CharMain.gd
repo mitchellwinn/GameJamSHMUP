@@ -8,10 +8,13 @@ var left = false
 var right = false
 var up = false
 var down = false
-var frameMod = 3
-var frameModGun = 3
+var frameMod = 4
+var frameModGun = 3.5
 var shooting = false
 var rng = RandomNumberGenerator.new()
+var playerBullet = preload("res://Bullets/bullet1.tscn")
+var shotTimer = 0
+var shotRotationMod = 0
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -51,6 +54,13 @@ func _physics_process(delta):
 		velocity.y += -144
 	if down:
 		velocity.y += 144
+	if shooting:
+		shotTimer-=delta
+		if shotTimer <= 0:
+			shotTimer = .01
+			var bullet = playerBullet.instantiate()
+			get_parent().add_child(bullet)
+			bullet.global_position = $SpawnShot.global_position+$Hands.position
 	move_and_slide()
 
 func _process(delta):
@@ -59,24 +69,38 @@ func _process(delta):
 func animate(delta):
 	if velocity.x>0:
 		frameMod = lerpf(frameMod,0,delta*8)
+		$Girl.rotation = lerpf($Girl.rotation,.075+shotRotationMod,.05)
+		$Pack.rotation = lerpf($Pack.rotation,.075+shotRotationMod,.1)
 	elif velocity.x==0:
-		frameMod = lerpf(frameMod,3,delta*8)
+		frameMod = lerpf(frameMod,3.5,delta*8)
+		$Girl.rotation = lerpf($Girl.rotation,.0+shotRotationMod,.05)
+		$Pack.rotation = lerpf($Pack.rotation,.0+shotRotationMod,.1)
 	elif velocity.x<0:
 		frameMod = lerpf(frameMod,7,delta*8)
+		$Girl.rotation = lerpf($Girl.rotation,-.075+shotRotationMod,.05)
+		$Pack.rotation = lerpf($Pack.rotation,-.075+shotRotationMod,.1)
 	$Girl.frame=25+frameMod
 	$Pack.frame=frameMod
 	$Gun.frame=16+frameModGun
 	$Hands.frame=8+frameModGun
+	$Girl.position = Vector2.ZERO 
+	$Pack.position = Vector2.ZERO 
 	$Gun.position = Vector2.ZERO 
 	$Hands.position = Vector2.ZERO
 	if shooting:
 		var targetPos = Vector2(rng.randf_range(-2,0),rng.randf_range(-2,2))
-		$Gun.position = lerp($Gun.position,targetPos,delta*80)
-		#$Hands.position =  lerp($Hands.position,targetPos,delta*80)
+		$Gun.position = lerp($Gun.position,targetPos,.3)
+		$Hands.position =  lerp($Hands.position,targetPos/2,.3)
 		$Gun.frame=16+frameModGun
+		$Gun.rotation = lerpf($Gun.rotation,-.055,.3)
 		$Hands.frame=8+frameModGun
-		frameModGun = lerpf(frameModGun,7,delta*16)
+		$Girl.position = targetPos/6
+		$Pack.position = targetPos/8
+		frameModGun = lerpf(frameModGun,7,.3)
+		shotRotationMod =-.055
 	else:
 		$Gun.position = Vector2.ZERO 
+		$Gun.rotation = lerpf($Gun.rotation,0,.3)
 		$Hands.position = Vector2.ZERO
-		frameModGun = lerpf(frameModGun,frameMod,delta*9)
+		frameModGun = lerpf(frameModGun,frameMod,.3)
+		shotRotationMod =0
