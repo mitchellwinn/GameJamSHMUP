@@ -1,40 +1,63 @@
-[gd_scene load_steps=9 format=3 uid="uid://mfmisl7mwl5i"]
+[gd_scene load_steps=18 format=3 uid="uid://mfmisl7mwl5i"]
 
+[ext_resource type="Script" path="res://Scripts/Level.gd" id="1_3mjdj"]
 [ext_resource type="Texture2D" uid="uid://cf7jfdbhjpxbs" path="res://Sprites/girl1-Sheet.png" id="1_mmoas"]
 [ext_resource type="Script" path="res://Scripts/CharMain.gd" id="1_pmppb"]
-[ext_resource type="Texture2D" uid="uid://byadhxet3s0lo" path="res://Sprites/earthmab.jpg" id="2_25rx2"]
 [ext_resource type="Script" path="res://Planet.gd" id="3_k8okg"]
+[ext_resource type="Texture2D" uid="uid://bcijj8wa812dk" path="res://Sprites/earthmab.png" id="3_vmtxk"]
 [ext_resource type="Texture2D" uid="uid://bocfxax215324" path="res://Sprites/Hubble_ultra_deep_field.png" id="4_avtk6"]
+[ext_resource type="Texture2D" uid="uid://boxfp8gcgliii" path="res://Sprites/tgz0hkhy.png" id="7_4mllc"]
+[ext_resource type="Texture2D" uid="uid://2q4r1qqlkgnj" path="res://Sprites/skyover.png" id="7_384ow"]
+[ext_resource type="Material" uid="uid://yp47lfscak6w" path="res://Scripts/water_test1(1).tres" id="7_x3kwd"]
+[ext_resource type="Texture2D" uid="uid://dqt3eb15nqvof" path="res://Sprites/NicePng_free-cloud-png_4006927.png" id="9_i6nvp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pur2c"]
-size = Vector2(5, 14)
+size = Vector2(3, 3)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_3kxj7"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_lietf"]
 viewport_path = NodePath("Node3D/SubViewport")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_45o7b"]
+size = Vector2(447, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bjt7c"]
+size = Vector2(10, 248)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pcp0o"]
 shading_mode = 2
+specular_mode = 1
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
 albedo_color = Color(0, 0.733333, 0.580392, 0.47451)
-albedo_texture = ExtResource("2_25rx2")
+albedo_texture = ExtResource("3_vmtxk")
 emission_enabled = true
-emission_energy_multiplier = 1.17
-emission_texture = ExtResource("2_25rx2")
+emission_energy_multiplier = 0.83
+emission_texture = ExtResource("3_vmtxk")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4nv84"]
+
+[sub_resource type="Environment" id="Environment_hin1o"]
+ambient_light_source = 2
+ambient_light_color = Color(0.870588, 0.431373, 0.00392157, 0.356863)
+ambient_light_energy = 0.0
+reflected_light_source = 1
+tonemap_exposure = 0.56
+tonemap_white = 0.12
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_3mjdj")
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+[node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(97, 63)
 motion_mode = 1
 script = ExtResource("1_pmppb")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-position = Vector2(-0.5, 1)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(-0.5, 0.5)
 shape = SubResource("RectangleShape2D_pur2c")
 metadata/_edit_lock_ = true
 
-[node name="Girl" type="Sprite2D" parent="CharacterBody2D"]
+[node name="Girl" type="Sprite2D" parent="Player"]
 texture_filter = 1
 texture = ExtResource("1_mmoas")
 hframes = 8
@@ -42,7 +65,7 @@ vframes = 4
 frame = 25
 metadata/_edit_lock_ = true
 
-[node name="Pack" type="Sprite2D" parent="CharacterBody2D"]
+[node name="Pack" type="Sprite2D" parent="Player"]
 z_index = -4
 texture_filter = 1
 texture = ExtResource("1_mmoas")
@@ -50,7 +73,7 @@ hframes = 8
 vframes = 4
 metadata/_edit_lock_ = true
 
-[node name="Gun" type="Sprite2D" parent="CharacterBody2D"]
+[node name="Gun" type="Sprite2D" parent="Player"]
 z_index = -2
 texture_filter = 1
 texture = ExtResource("1_mmoas")
@@ -59,7 +82,7 @@ vframes = 4
 frame = 16
 metadata/_edit_lock_ = true
 
-[node name="Hands" type="Sprite2D" parent="CharacterBody2D"]
+[node name="Hands" type="Sprite2D" parent="Player"]
 z_index = -3
 texture_filter = 1
 texture = ExtResource("1_mmoas")
@@ -68,36 +91,120 @@ vframes = 4
 frame = 8
 metadata/_edit_lock_ = true
 
-[node name="SpawnShot" type="Node2D" parent="CharacterBody2D"]
-position = Vector2(22.771, -3.219)
+[node name="SpawnShot" type="Node2D" parent="Player"]
+position = Vector2(20.647, -2.11)
 
 [node name="BG" type="Sprite2D" parent="."]
+self_modulate = Color(0.988235, 1, 1, 1)
 z_index = -99
 texture_filter = 1
 position = Vector2(216, 121.5)
-texture = SubResource("ViewportTexture_3kxj7")
+texture = SubResource("ViewportTexture_lietf")
 
-[node name="Node3D" type="CSGSphere3D" parent="."]
-transform = Transform3D(1.22279, -0.441341, 0, 0.441341, 1.22279, 0, 0, 0, 1.3, -2.18911, -0.144045, -1.37329)
-lod_bias = 0.001
-material = SubResource("StandardMaterial3D_pcp0o")
-script = ExtResource("3_k8okg")
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="wall2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(214, 248)
+shape = SubResource("RectangleShape2D_45o7b")
+
+[node name="wall1" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(213.5, -5)
+shape = SubResource("RectangleShape2D_45o7b")
+
+[node name="wall3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-5, 123)
+shape = SubResource("RectangleShape2D_bjt7c")
+
+[node name="wall4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(437, 123)
+shape = SubResource("RectangleShape2D_bjt7c")
+
+[node name="Node3D" type="Node3D" parent="."]
 
 [node name="SubViewport" type="SubViewport" parent="Node3D"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+mesh_lod_threshold = 0.0
+fsr_sharpness = 2.0
+vrs_mode = 1
 size = Vector2i(432, 243)
 
 [node name="Camera3D" type="Camera3D" parent="Node3D/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.33969)
-projection = 1
-fov = 78.2
+fov = 39.7
 size = 3.514
 frustum_offset = Vector2(-0.013, 0)
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 0, 0, -7.04318)
+[node name="Level_1" type="Node3D" parent="Node3D"]
+visible = false
+
+[node name="fg1" type="CSGSphere3D" parent="Node3D/Level_1"]
+transform = Transform3D(0.17, -6.42944e-09, 0, 6.42944e-09, 0.17, 0, 0, 0, 0.17, 0.495, 0.141, 0)
+lod_bias = 0.001
+material = SubResource("StandardMaterial3D_pcp0o")
+script = ExtResource("3_k8okg")
+
+[node name="bg" type="Sprite3D" parent="Node3D/Level_1"]
+transform = Transform3D(0.572308, 0, 0, 0, 0.572308, 0, 0, 0, 0.572308, 0.556833, -0.0831773, -4.36145)
 flip_h = true
 flip_v = true
 modulate = Color(0.466667, 0.329412, 0.486275, 1)
-billboard = 1
+double_sided = false
 texture_filter = 0
 texture = ExtResource("4_avtk6")
+
+[node name="Level_0" type="Node3D" parent="Node3D"]
+
+[node name="bg3" type="Sprite2D" parent="Node3D/Level_0"]
+z_index = -100
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_4nv84")
+position = Vector2(216, 198)
+texture = ExtResource("7_4mllc")
+
+[node name="bg2" type="Sprite2D" parent="Node3D/Level_0"]
+modulate = Color(0.615686, 1, 1, 0.172549)
+z_index = 98
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_4nv84")
+position = Vector2(559, 121)
+texture = ExtResource("7_384ow")
+
+[node name="bg" type="Sprite2D" parent="Node3D/Level_0"]
+self_modulate = Color(47.3412, 0.588235, 3.54902, 1)
+z_index = -101
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_4nv84")
+position = Vector2(459, 60)
+texture = ExtResource("9_i6nvp")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Node3D/Level_0"]
+transform = Transform3D(200, 0, 0, 0, -9.78592, 23.5973, 0, -23.5973, -9.78592, 0, -13.209, -2.272)
+material_override = ExtResource("7_x3kwd")
+lod_bias = 0.001
+radial_segments = 100
+rings = 100
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Node3D/Level_0/CSGSphere3D"]
+transform = Transform3D(0.005, 0, 0, 0, 0.0391451, -5.58794e-09, 0, 5.58794e-09, 0.0391451, 0, -0.116, 0.562)
+light_color = Color(0.768627, 0.113725, 0, 1)
+light_energy = 16.0
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 16.0
+light_size = 1.0
+light_specular = 5.981
+spot_range = 12.601
+spot_angle = 65.34
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Node3D"]
+transform = Transform3D(-0.996917, -0.078459, 0, 0.0729997, -0.927549, 0.366501, -0.0287553, 0.365371, 0.930418, 0, 0, 0)
+light_color = Color(0.764706, 0.960784, 0.968627, 1)
+light_energy = 4.116
+light_indirect_energy = 1.449
+light_volumetric_fog_energy = 1.449
+light_angular_distance = 2.52
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D"]
+environment = SubResource("Environment_hin1o")

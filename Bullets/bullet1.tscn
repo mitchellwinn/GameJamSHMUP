@@ -11,3 +11,7 @@ z_index = 5
 texture_filter = 1
 texture = ExtResource("2_sp1qs")
 hframes = 6
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

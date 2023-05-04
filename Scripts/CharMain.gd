@@ -11,6 +11,7 @@ var down = false
 var frameMod = 4
 var frameModGun = 3.5
 var shooting = false
+var recoil = false
 var rng = RandomNumberGenerator.new()
 var playerBullet = preload("res://Bullets/bullet1.tscn")
 var shotTimer = 0
@@ -43,6 +44,7 @@ func _input(event):
 		shooting = false
 
 func _physics_process(delta):
+	shotTimer-=delta
 	velocity = Vector2.ZERO
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -55,12 +57,23 @@ func _physics_process(delta):
 	if down:
 		velocity.y += 144
 	if shooting:
-		shotTimer-=delta
 		if shotTimer <= 0:
-			shotTimer = .01
-			var bullet = playerBullet.instantiate()
-			get_parent().add_child(bullet)
-			bullet.global_position = $SpawnShot.global_position+$Hands.position
+			shotTimer = .3
+			var count = 0
+			var burstAmt = 99
+			while(count<burstAmt):	
+				recoil = true
+				var bullet = playerBullet.instantiate()
+				var fx = bullet.shootFx.instantiate()
+				burstAmt = bullet.burstAmount;
+				get_parent().add_child(bullet)
+				get_parent().add_child(fx)
+				bullet.global_position = $SpawnShot.global_position+$Hands.position
+				fx.global_position = $SpawnShot.global_position+$Hands.position-Vector2(6,0)
+				count+=1
+				await get_tree().create_timer(.02).timeout
+			recoil = false
+	velocity = velocity.normalized()*144
 	move_and_slide()
 
 func _process(delta):
@@ -87,7 +100,7 @@ func animate(delta):
 	$Pack.position = Vector2.ZERO 
 	$Gun.position = Vector2.ZERO 
 	$Hands.position = Vector2.ZERO
-	if shooting:
+	if recoil:
 		var targetPos = Vector2(rng.randf_range(-2,0),rng.randf_range(-2,2))
 		$Gun.position = lerp($Gun.position,targetPos,.3)
 		$Hands.position =  lerp($Hands.position,targetPos/2,.3)
@@ -100,7 +113,7 @@ func animate(delta):
 		shotRotationMod =-.055
 	else:
 		$Gun.position = Vector2.ZERO 
-		$Gun.rotation = lerpf($Gun.rotation,0,.3)
+		$Gun.rotation = lerpf($Gun.rotation,0,.03)
 		$Hands.position = Vector2.ZERO
-		frameModGun = lerpf(frameModGun,frameMod,.3)
+		frameModGun = lerpf(frameModGun,frameMod,.03)
 		shotRotationMod =0

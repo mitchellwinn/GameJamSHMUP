@@ -8,5 +8,5 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	rotate_y(0.144/90)
-	rotate_x(0.144/300)
+	rotate_y(0.144/180)
+	rotate_x(0.144/600)
