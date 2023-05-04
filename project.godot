@@ -15,13 +15,21 @@ run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Spawning="*res://addons/BulletUpHell/Spawning.tscn"
+
 [display]
 
 window/size/viewport_width=432
 window/size/viewport_height=243
 window/size/transparent=true
-window/per_pixel_transparency/allowed=true
 window/stretch/mode="canvas_items"
+window/per_pixel_transparency/allowed=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/BulletUpHell/plugin.cfg")
 
 [input]
 
