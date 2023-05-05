@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://mfmisl7mwl5i"]
+[gd_scene load_steps=20 format=3 uid="uid://dc0r58am0tjyu"]
 
 [ext_resource type="Script" path="res://Scripts/Level.gd" id="1_3mjdj"]
 [ext_resource type="Texture2D" uid="uid://cf7jfdbhjpxbs" path="res://Sprites/girl1-Sheet.png" id="1_mmoas"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Planet.gd" id="3_k8okg"]
 [ext_resource type="Texture2D" uid="uid://bcijj8wa812dk" path="res://Sprites/earthmab.png" id="3_vmtxk"]
 [ext_resource type="Texture2D" uid="uid://bocfxax215324" path="res://Sprites/Hubble_ultra_deep_field.png" id="4_avtk6"]
+[ext_resource type="Texture2D" uid="uid://dywjot18dblqh" path="res://Sprites/uiWIndow.png" id="4_rx3s6"]
 [ext_resource type="Texture2D" uid="uid://boxfp8gcgliii" path="res://Sprites/tgz0hkhy.png" id="7_4mllc"]
 [ext_resource type="Texture2D" uid="uid://2q4r1qqlkgnj" path="res://Sprites/skyover.png" id="7_384ow"]
 [ext_resource type="Material" uid="uid://yp47lfscak6w" path="res://Scripts/water_test1(1).tres" id="7_x3kwd"]
@@ -33,6 +34,9 @@ albedo_texture = ExtResource("3_vmtxk")
 emission_enabled = true
 emission_energy_multiplier = 0.83
 emission_texture = ExtResource("3_vmtxk")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_nmxwi"]
+blend_mode = 1
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4nv84"]
 
@@ -101,6 +105,13 @@ texture_filter = 1
 position = Vector2(216, 121.5)
 texture = SubResource("ViewportTexture_lietf")
 
+[node name="UI" type="Sprite2D" parent="."]
+self_modulate = Color(0.988235, 1, 1, 1)
+z_index = 100
+texture_filter = 1
+position = Vector2(216, 120)
+texture = ExtResource("4_rx3s6")
+
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 [node name="wall2" type="CollisionShape2D" parent="StaticBody2D"]
@@ -108,7 +119,7 @@ position = Vector2(214, 248)
 shape = SubResource("RectangleShape2D_45o7b")
 
 [node name="wall1" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(213.5, -5)
+position = Vector2(213.5, 38)
 shape = SubResource("RectangleShape2D_45o7b")
 
 [node name="wall3" type="CollisionShape2D" parent="StaticBody2D"]
@@ -157,16 +168,25 @@ texture = ExtResource("4_avtk6")
 
 [node name="Level_0" type="Node3D" parent="Node3D"]
 
-[node name="bg3" type="Sprite2D" parent="Node3D/Level_0"]
+[node name="bg4" type="Sprite2D" parent="Node3D/Level_0"]
+modulate = Color(1, 0.45098, 0.815686, 1)
 z_index = -100
 texture_filter = 1
-material = SubResource("CanvasItemMaterial_4nv84")
-position = Vector2(216, 198)
+material = SubResource("CanvasItemMaterial_nmxwi")
+position = Vector2(1694, 192.5)
+texture = ExtResource("7_4mllc")
+
+[node name="bg3" type="Sprite2D" parent="Node3D/Level_0"]
+modulate = Color(1, 0.45098, 0.815686, 1)
+z_index = -100
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_nmxwi")
+position = Vector2(802, 192.5)
 texture = ExtResource("7_4mllc")
 
 [node name="bg2" type="Sprite2D" parent="Node3D/Level_0"]
-modulate = Color(0.615686, 1, 1, 0.172549)
-z_index = 98
+modulate = Color(0.615686, 1, 1, 0.372549)
+z_index = -98
 texture_filter = 1
 material = SubResource("CanvasItemMaterial_4nv84")
 position = Vector2(559, 121)
@@ -177,7 +197,7 @@ self_modulate = Color(47.3412, 0.588235, 3.54902, 1)
 z_index = -101
 texture_filter = 1
 material = SubResource("CanvasItemMaterial_4nv84")
-position = Vector2(459, 60)
+position = Vector2(997, 60)
 texture = ExtResource("9_i6nvp")
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="Node3D/Level_0"]

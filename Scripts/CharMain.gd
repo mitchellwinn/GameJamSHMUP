@@ -83,15 +83,15 @@ func animate(delta):
 	if velocity.x>0:
 		frameMod = lerpf(frameMod,0,delta*8)
 		$Girl.rotation = lerpf($Girl.rotation,.075+shotRotationMod,.05)
-		$Pack.rotation = lerpf($Pack.rotation,.075+shotRotationMod,.1)
+		$Pack.rotation = lerpf($Pack.rotation,.075+shotRotationMod,.02)
 	elif velocity.x==0:
 		frameMod = lerpf(frameMod,3.5,delta*8)
 		$Girl.rotation = lerpf($Girl.rotation,.0+shotRotationMod,.05)
-		$Pack.rotation = lerpf($Pack.rotation,.0+shotRotationMod,.1)
+		$Pack.rotation = lerpf($Pack.rotation,.0+shotRotationMod,.02)
 	elif velocity.x<0:
 		frameMod = lerpf(frameMod,7,delta*8)
 		$Girl.rotation = lerpf($Girl.rotation,-.075+shotRotationMod,.05)
-		$Pack.rotation = lerpf($Pack.rotation,-.075+shotRotationMod,.1)
+		$Pack.rotation = lerpf($Pack.rotation,-.075+shotRotationMod,.02)
 	$Girl.frame=25+frameMod
 	$Pack.frame=frameMod
 	$Gun.frame=16+frameModGun
@@ -106,6 +106,7 @@ func animate(delta):
 		$Hands.position =  lerp($Hands.position,targetPos/2,.3)
 		$Gun.frame=16+frameModGun
 		$Gun.rotation = lerpf($Gun.rotation,-.055,.3)
+		$Hands.rotation = lerpf($Hands.rotation,-.055,.3)
 		$Hands.frame=8+frameModGun
 		$Girl.position = targetPos/6
 		$Pack.position = targetPos/8
@@ -114,6 +115,7 @@ func animate(delta):
 	else:
 		$Gun.position = Vector2.ZERO 
 		$Gun.rotation = lerpf($Gun.rotation,0,.03)
+		$Hands.rotation = lerpf($Hands.rotation,0,.03)
 		$Hands.position = Vector2.ZERO
 		frameModGun = lerpf(frameModGun,frameMod,.03)
 		shotRotationMod =0
