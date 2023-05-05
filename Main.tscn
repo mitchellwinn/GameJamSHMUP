@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dc0r58am0tjyu"]
+[gd_scene load_steps=25 format=3 uid="uid://dc0r58am0tjyu"]
 
 [ext_resource type="Script" path="res://Scripts/Level.gd" id="1_3mjdj"]
 [ext_resource type="Texture2D" uid="uid://cf7jfdbhjpxbs" path="res://Sprites/girl1-Sheet.png" id="1_mmoas"]
@@ -7,6 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://bcijj8wa812dk" path="res://Sprites/earthmab.png" id="3_vmtxk"]
 [ext_resource type="Texture2D" uid="uid://bocfxax215324" path="res://Sprites/Hubble_ultra_deep_field.png" id="4_avtk6"]
 [ext_resource type="Texture2D" uid="uid://dywjot18dblqh" path="res://Sprites/uiWIndow.png" id="4_rx3s6"]
+[ext_resource type="Texture2D" uid="uid://56wy5ev0fwr4" path="res://Sprites/energySheet.png" id="4_useod"]
+[ext_resource type="Texture2D" uid="uid://bf1phu23j87wu" path="res://Sprites/energySheet2.png" id="5_xe6hy"]
+[ext_resource type="Texture2D" uid="uid://poocuv7we3uo" path="res://Sprites/energyBarSHeet.png" id="6_67fce"]
 [ext_resource type="Texture2D" uid="uid://boxfp8gcgliii" path="res://Sprites/tgz0hkhy.png" id="7_4mllc"]
 [ext_resource type="Texture2D" uid="uid://2q4r1qqlkgnj" path="res://Sprites/skyover.png" id="7_384ow"]
 [ext_resource type="Material" uid="uid://yp47lfscak6w" path="res://Scripts/water_test1(1).tres" id="7_x3kwd"]
@@ -14,6 +17,27 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pur2c"]
 size = Vector2(3, 3)
+
+[sub_resource type="Animation" id="Animation_kqm0m"]
+resource_name = "default"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0001, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [2, 0, 1, 2, 3, 4]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hudfu"]
+_data = {
+"default": SubResource("Animation_kqm0m")
+}
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_lietf"]
 viewport_path = NodePath("Node3D/SubViewport")
@@ -77,6 +101,34 @@ hframes = 8
 vframes = 4
 metadata/_edit_lock_ = true
 
+[node name="Energy1" type="Sprite2D" parent="Player/Pack"]
+z_index = -5
+position = Vector2(-9, -1)
+texture = ExtResource("4_useod")
+hframes = 5
+frame = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Pack/Energy1"]
+speed_scale = 2.0
+method_call_mode = 1
+libraries = {
+"": SubResource("AnimationLibrary_hudfu")
+}
+
+[node name="Energy2" type="Sprite2D" parent="Player/Pack"]
+z_index = -5
+position = Vector2(5, -2)
+texture = ExtResource("5_xe6hy")
+hframes = 5
+frame = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Pack/Energy2"]
+speed_scale = 2.0
+method_call_mode = 1
+libraries = {
+"": SubResource("AnimationLibrary_hudfu")
+}
+
 [node name="Gun" type="Sprite2D" parent="Player"]
 z_index = -2
 texture_filter = 1
@@ -96,7 +148,7 @@ frame = 8
 metadata/_edit_lock_ = true
 
 [node name="SpawnShot" type="Node2D" parent="Player"]
-position = Vector2(20.647, -2.11)
+position = Vector2(20.647, -3)
 
 [node name="BG" type="Sprite2D" parent="."]
 self_modulate = Color(0.988235, 1, 1, 1)
@@ -107,10 +159,15 @@ texture = SubResource("ViewportTexture_lietf")
 
 [node name="UI" type="Sprite2D" parent="."]
 self_modulate = Color(0.988235, 1, 1, 1)
-z_index = 100
+z_index = -20
 texture_filter = 1
 position = Vector2(216, 120)
 texture = ExtResource("4_rx3s6")
+
+[node name="Energy" type="Sprite2D" parent="UI"]
+position = Vector2(80, -106)
+texture = ExtResource("6_67fce")
+hframes = 25
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
@@ -119,7 +176,7 @@ position = Vector2(214, 248)
 shape = SubResource("RectangleShape2D_45o7b")
 
 [node name="wall1" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(213.5, 38)
+position = Vector2(213.5, 42)
 shape = SubResource("RectangleShape2D_45o7b")
 
 [node name="wall3" type="CollisionShape2D" parent="StaticBody2D"]

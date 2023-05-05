@@ -80,6 +80,8 @@ func _process(delta):
 	animate(delta)
 	
 func animate(delta):
+	get_node("Pack/Energy1/AnimationPlayer").play("default")
+	get_node("Pack/Energy2/AnimationPlayer").play("default")
 	if velocity.x>0:
 		frameMod = lerpf(frameMod,0,delta*8)
 		$Girl.rotation = lerpf($Girl.rotation,.075+shotRotationMod,.05)
