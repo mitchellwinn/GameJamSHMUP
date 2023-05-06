@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://dc0r58am0tjyu"]
+[gd_scene load_steps=31 format=3 uid="uid://dc0r58am0tjyu"]
 
 [ext_resource type="Script" path="res://Scripts/Level.gd" id="1_3mjdj"]
 [ext_resource type="Texture2D" uid="uid://cf7jfdbhjpxbs" path="res://Sprites/girl1-Sheet.png" id="1_mmoas"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://boxfp8gcgliii" path="res://Sprites/tgz0hkhy.png" id="7_4mllc"]
 [ext_resource type="Texture2D" uid="uid://2q4r1qqlkgnj" path="res://Sprites/skyover.png" id="7_384ow"]
 [ext_resource type="Material" uid="uid://yp47lfscak6w" path="res://Scripts/water_test1(1).tres" id="7_x3kwd"]
+[ext_resource type="FontFile" uid="uid://bh35l8wkc2etl" path="res://ARCADECLASSIC.TTF" id="8_qt78k"]
 [ext_resource type="Texture2D" uid="uid://dqt3eb15nqvof" path="res://Sprites/NicePng_free-cloud-png_4006927.png" id="9_i6nvp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pur2c"]
@@ -41,6 +42,21 @@ _data = {
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_lietf"]
 viewport_path = NodePath("Node3D/SubViewport")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_2uxxo"]
+blend_mode = 1
+light_mode = 1
+
+[sub_resource type="FontVariation" id="FontVariation_3eagv"]
+base_font = ExtResource("8_qt78k")
+variation_face_index = 40
+variation_embolden = 0.05
+spacing_glyph = 1
+
+[sub_resource type="Theme" id="Theme_xmj8a"]
+default_font = SubResource("FontVariation_3eagv")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u00mv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_45o7b"]
 size = Vector2(447, 10)
@@ -176,6 +192,21 @@ position = Vector2(80, -106)
 texture = ExtResource("6_67fce")
 hframes = 25
 
+[node name="Score" type="RichTextLabel" parent="UI"]
+texture_filter = 1
+texture_repeat = 2
+material = SubResource("CanvasItemMaterial_2uxxo")
+offset_left = 147.0
+offset_top = -104.0
+offset_right = 210.0
+offset_bottom = -82.0
+theme = SubResource("Theme_xmj8a")
+theme_override_font_sizes/normal_font_size = 17
+theme_override_styles/focus = SubResource("StyleBoxFlat_u00mv")
+bbcode_enabled = true
+text = "[center]000000[center]"
+scroll_active = false
+
 [node name="Boundaries" type="StaticBody2D" parent="."]
 
 [node name="wall2" type="CollisionShape2D" parent="Boundaries"]
@@ -295,4 +326,8 @@ environment = SubResource("Environment_hin1o")
 
 [node name="OceanSpawns" type="Path2D" parent="."]
 position = Vector2(279, 204)
+curve = SubResource("Curve2D_oiji0")
+
+[node name="OceanSpawns2" type="Path2D" parent="."]
+position = Vector2(15, 204)
 curve = SubResource("Curve2D_oiji0")

@@ -4,9 +4,11 @@ var level = 0
 var bgSpeed = .02
 var fg1Speed = .006
 var frame = 0
+var score = 0
 
 var rng= RandomNumberGenerator.new()
 var urchin = preload("res://Enemies/Urchin.tscn")
+var killerFish = preload("res://Enemies/KillerFish.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -29,5 +31,24 @@ func spawn(obj,pos):
 	thisObj.global_position = pos
 	
 func enemySpawns():
-	if frame%(144*(5)) == 144*(5)-1:#2 seconds in
+	if frame%(144*(5)) == 144*(5)-1:#5 seconds in
 			spawn(urchin,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+	if frame%(144*(3)) == 144*(3)-1 && rng.randf_range(0,1)>.6:#3 seconds in
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			await get_tree().create_timer(.2).timeout
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			await get_tree().create_timer(.2).timeout
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			await get_tree().create_timer(.2).timeout
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			await get_tree().create_timer(.2).timeout
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			await get_tree().create_timer(.2).timeout
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			await get_tree().create_timer(.2).timeout
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			await get_tree().create_timer(.2).timeout
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			await get_tree().create_timer(.2).timeout
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			

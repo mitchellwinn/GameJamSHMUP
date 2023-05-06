@@ -2,15 +2,15 @@ extends Node2D
 
 var time = 0
 var frame = 0
-var waves = 4
 var n = 0
 var startPos = Vector3.ZERO
+var points  = 30
 
 var wave = preload("res://Particles/Wave.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	remove_child($Wave)
+	pass
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
