@@ -3,7 +3,9 @@ extends Node2D
 var speed = 3.5
 var frameActual = 0
 var burstAmount = 5
+var damage = 3
 var shootFx = preload("res://Bullets/hitEffect1.tscn")
+var explodeParticle = preload("res://Particles/explode.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -19,3 +21,9 @@ func _physics_process(delta):
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	queue_free()
 	print("Deleted")
+	
+func explode():
+	var obj = explodeParticle.instantiate()
+	get_parent().add_child(obj)
+	obj.global_position = global_position
+	queue_free()

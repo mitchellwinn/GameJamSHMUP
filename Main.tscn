@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://dc0r58am0tjyu"]
+[gd_scene load_steps=26 format=3 uid="uid://dc0r58am0tjyu"]
 
 [ext_resource type="Script" path="res://Scripts/Level.gd" id="1_3mjdj"]
 [ext_resource type="Texture2D" uid="uid://cf7jfdbhjpxbs" path="res://Sprites/girl1-Sheet.png" id="1_mmoas"]
@@ -71,6 +71,13 @@ ambient_light_energy = 0.0
 reflected_light_source = 1
 tonemap_exposure = 0.56
 tonemap_white = 0.12
+
+[sub_resource type="Curve2D" id="Curve2D_oiji0"]
+bake_interval = 18.84
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 90, 0, 0, 0, 0, 0, 120, 0, 0, 0, 0, 0, 135, -30, 0, 0, 0, 0, 110, -30, 0, 0, 0, 0, 80, -30, 0, 0, 0, 0, 50, -30, 0, 0, 0, 0, 20, -30)
+}
+point_count = 10
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_3mjdj")
@@ -169,21 +176,21 @@ position = Vector2(80, -106)
 texture = ExtResource("6_67fce")
 hframes = 25
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="Boundaries" type="StaticBody2D" parent="."]
 
-[node name="wall2" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="wall2" type="CollisionShape2D" parent="Boundaries"]
 position = Vector2(214, 248)
 shape = SubResource("RectangleShape2D_45o7b")
 
-[node name="wall1" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="wall1" type="CollisionShape2D" parent="Boundaries"]
 position = Vector2(213.5, 42)
 shape = SubResource("RectangleShape2D_45o7b")
 
-[node name="wall3" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="wall3" type="CollisionShape2D" parent="Boundaries"]
 position = Vector2(-5, 123)
 shape = SubResource("RectangleShape2D_bjt7c")
 
-[node name="wall4" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="wall4" type="CollisionShape2D" parent="Boundaries"]
 position = Vector2(437, 123)
 shape = SubResource("RectangleShape2D_bjt7c")
 
@@ -285,3 +292,7 @@ light_angular_distance = 2.52
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D"]
 environment = SubResource("Environment_hin1o")
+
+[node name="OceanSpawns" type="Path2D" parent="."]
+position = Vector2(279, 204)
+curve = SubResource("Curve2D_oiji0")
