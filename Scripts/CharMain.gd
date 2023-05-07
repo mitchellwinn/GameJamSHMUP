@@ -44,6 +44,9 @@ func _input(event):
 		shooting = false
 
 func _physics_process(delta):
+	if $Stats.dead:
+		scale = Vector2.ZERO
+		return
 	shotTimer-=delta
 	velocity = Vector2.ZERO
 	# Get the input direction and handle the movement/deceleration.
@@ -56,8 +59,14 @@ func _physics_process(delta):
 		velocity.y += -144
 	if down:
 		velocity.y += 144
+	shoot()
+	velocity = velocity.normalized()*144
+	move_and_slide()
+	
+func shoot():
 	if shooting:
 		if shotTimer <= 0:
+			$Stats.currentENERGY-=1
 			shotTimer = .3
 			var count = 0
 			var burstAmt = 99
@@ -65,33 +74,53 @@ func _physics_process(delta):
 				recoil = true
 				var bullet = playerBullet.instantiate()
 				var fx = bullet.shootFx.instantiate()
-				burstAmt = bullet.burstAmount;
+				burstAmt = bullet.burstAmount/2+$Stats.currentENERGY/2;
 				get_parent().add_child(bullet)
 				get_parent().add_child(fx)
+				if($Stats.currentENERGY>16):
+					var topBullet = playerBullet.instantiate()
+					var fxTop = topBullet.shootFx.instantiate()
+					get_parent().add_child(topBullet)
+					get_parent().add_child(fxTop)
+					fxTop.global_position = $SpawnShot.global_position+$Hands.position-Vector2(6,0)
+					topBullet.global_position = $SpawnShot.global_position+$Hands.position+Vector2(-7,7)
+					var bottomBullet = playerBullet.instantiate()
+					var fxBot = bottomBullet.shootFx.instantiate()
+					get_parent().add_child(bottomBullet)
+					get_parent().add_child(fxBot)
+					fxBot.global_position = $SpawnShot.global_position+$Hands.position-Vector2(6,0)
+					bottomBullet.global_position = $SpawnShot.global_position+$Hands.position+Vector2(-7,-7)
 				bullet.global_position = $SpawnShot.global_position+$Hands.position
 				fx.global_position = $SpawnShot.global_position+$Hands.position-Vector2(6,0)
 				count+=1
 				await get_tree().create_timer(.02).timeout
 			recoil = false
-	velocity = velocity.normalized()*144
-	move_and_slide()
 
 func _process(delta):
 	animate(delta)
 	
 func animate(delta):
+	if $Stats.infFrames>0:
+		if get_parent().frame%8<4:
+			visible = false
+		else:
+			visible = true
+	else:
+			visible = true
+	get_node("Pack/Energy1/AnimationPlayer").play("default")
+	get_node("Pack/Energy2/AnimationPlayer").play("default")
 	if velocity.x>0:
 		frameMod = lerpf(frameMod,0,delta*8)
 		$Girl.rotation = lerpf($Girl.rotation,.075+shotRotationMod,.05)
-		$Pack.rotation = lerpf($Pack.rotation,.075+shotRotationMod,.1)
+		$Pack.rotation = lerpf($Pack.rotation,.075+shotRotationMod,.02)
 	elif velocity.x==0:
 		frameMod = lerpf(frameMod,3.5,delta*8)
 		$Girl.rotation = lerpf($Girl.rotation,.0+shotRotationMod,.05)
-		$Pack.rotation = lerpf($Pack.rotation,.0+shotRotationMod,.1)
+		$Pack.rotation = lerpf($Pack.rotation,.0+shotRotationMod,.02)
 	elif velocity.x<0:
 		frameMod = lerpf(frameMod,7,delta*8)
 		$Girl.rotation = lerpf($Girl.rotation,-.075+shotRotationMod,.05)
-		$Pack.rotation = lerpf($Pack.rotation,-.075+shotRotationMod,.1)
+		$Pack.rotation = lerpf($Pack.rotation,-.075+shotRotationMod,.02)
 	$Girl.frame=25+frameMod
 	$Pack.frame=frameMod
 	$Gun.frame=16+frameModGun
@@ -106,6 +135,7 @@ func animate(delta):
 		$Hands.position =  lerp($Hands.position,targetPos/2,.3)
 		$Gun.frame=16+frameModGun
 		$Gun.rotation = lerpf($Gun.rotation,-.055,.3)
+		$Hands.rotation = lerpf($Hands.rotation,-.055,.3)
 		$Hands.frame=8+frameModGun
 		$Girl.position = targetPos/6
 		$Pack.position = targetPos/8
@@ -114,6 +144,33 @@ func animate(delta):
 	else:
 		$Gun.position = Vector2.ZERO 
 		$Gun.rotation = lerpf($Gun.rotation,0,.03)
+		$Hands.rotation = lerpf($Hands.rotation,0,.03)
 		$Hands.position = Vector2.ZERO
 		frameModGun = lerpf(frameModGun,frameMod,.03)
 		shotRotationMod =0
+
+
+func _on_area_2d_area_entered(area):
+	if area.collision_layer==4 && !area.get_parent().get_parent().get_parent().get_parent().get_node("Stats").dead:
+		if $Stats.infFrames>0:
+			print ("infFrames:"+str($Stats.infFrames))
+			return
+		$Stats.currentHP-=1
+		$Stats.infFrames=.75
+	elif area.collision_layer==16:
+		area.get_parent().queue_free()
+		get_parent().score+=2
+		$Stats.currentENERGY+=1
+	else:
+		print("badLayer")
+		
+func die():
+	Help.spawn("biggerExplode",global_position+Vector2(-10,-10))
+	await get_tree().create_timer(.2).timeout
+	Help.spawn("biggerExplode",global_position+Vector2(-10,-10))
+	await get_tree().create_timer(.4).timeout
+	get_parent().fadeOut()
+	await get_tree().create_timer(1).timeout
+	get_tree().change_scene_to_file("res://Title.tscn")
+	queue_free()
+		

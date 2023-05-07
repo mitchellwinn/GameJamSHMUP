@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="SHMUP"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://Title.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
+Help="*res://Scripts/help.gd"
 Spawning="*res://addons/BulletUpHell/Spawning.tscn"
 
 [display]
