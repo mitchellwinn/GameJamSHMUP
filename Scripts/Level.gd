@@ -9,10 +9,27 @@ var score = 0
 var rng= RandomNumberGenerator.new()
 var urchin = preload("res://Enemies/Urchin.tscn")
 var killerFish = preload("res://Enemies/KillerFish.tscn")
+var player = preload("res://Player.tscn")
+
+
+func fadeIn():
+	var opacity = 1
+	while opacity>0:
+		await get_tree().create_timer(1.0/144).timeout
+		opacity-=1.0/144
+		$UI/black.modulate = Color(0,0,0,opacity)
+		
+func fadeOut():
+	var opacity = 0
+	while opacity<1:
+		await get_tree().create_timer(1.0/144).timeout
+		opacity+=1.0/144
+		$UI/black.modulate = Color(0,0,0,opacity)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	spawn(player,Vector2(100,100))
+	fadeIn()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	if level == 0:

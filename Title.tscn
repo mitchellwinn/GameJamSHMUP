@@ -1,0 +1,184 @@
+[gd_scene load_steps=20 format=3 uid="uid://ce4vsmmg70hq6"]
+
+[ext_resource type="Script" path="res://Scripts/Title.gd" id="1_1wvmo"]
+[ext_resource type="Texture2D" uid="uid://du65vn76pmbya" path="res://Sprites/depths-Sheet.png" id="2_3bp54"]
+[ext_resource type="Texture2D" uid="uid://boxfp8gcgliii" path="res://Sprites/tgz0hkhy.png" id="4_8w6wl"]
+[ext_resource type="Texture2D" uid="uid://dqt3eb15nqvof" path="res://Sprites/NicePng_free-cloud-png_4006927.png" id="6_7dp2p"]
+[ext_resource type="Texture2D" uid="uid://c4d6ljjpqs1cc" path="res://Sprites/depths.png" id="6_yxbtv"]
+[ext_resource type="Material" uid="uid://yp47lfscak6w" path="res://Scripts/water_test1(1).tres" id="7_prkwy"]
+[ext_resource type="Texture2D" uid="uid://b7lgbmajcu0tx" path="res://Sprites/title.png" id="7_rh45l"]
+[ext_resource type="Texture2D" uid="uid://bnmno872wbqjs" path="res://Sprites/start.png" id="8_eu8xx"]
+[ext_resource type="AudioStream" uid="uid://lkwh2tlq8ojw" path="res://SFX/select1.mp3" id="9_32qa0"]
+[ext_resource type="Texture2D" uid="uid://by61fqfvacxlq" path="res://Sprites/quitt.png" id="9_ey5l0"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_hxmnw"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5bmmn"]
+blend_mode = 1
+
+[sub_resource type="Environment" id="Environment_qegp2"]
+ambient_light_source = 2
+ambient_light_color = Color(0.870588, 0.431373, 0.00392157, 0.356863)
+ambient_light_energy = 0.0
+reflected_light_source = 1
+tonemap_exposure = 0.56
+tonemap_white = 0.12
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_117c6"]
+viewport_path = NodePath("Node3D/SubViewport")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_xc0or"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_htcuy"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_n7lim"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_nqeti"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_xremn"]
+gradient = SubResource("Gradient_nqeti")
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_1wvmo")
+
+[node name="depths" type="Sprite2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.266667)
+z_index = -98
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_hxmnw")
+position = Vector2(216.089, 141)
+texture = ExtResource("2_3bp54")
+hframes = 6
+frame = 3
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="SubViewport" type="SubViewport" parent="Node3D"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+mesh_lod_threshold = 0.0
+fsr_sharpness = 2.0
+vrs_mode = 1
+size = Vector2i(432, 243)
+
+[node name="Camera3D" type="Camera3D" parent="Node3D/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.740805, 0.671721, 0, -0.671721, 0.740805, 0, 0, 1.33969)
+fov = 39.7
+size = 3.514
+frustum_offset = Vector2(-0.013, 0)
+
+[node name="Stage" type="Node3D" parent="Node3D"]
+
+[node name="bg4" type="Sprite2D" parent="Node3D/Stage"]
+visible = false
+modulate = Color(1, 0.45098, 0.815686, 1)
+z_index = -100
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_5bmmn")
+position = Vector2(1694, 192.5)
+texture = ExtResource("4_8w6wl")
+
+[node name="bg3" type="Sprite2D" parent="Node3D/Stage"]
+modulate = Color(1, 0.45098, 0.815686, 1)
+z_index = -100
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_5bmmn")
+position = Vector2(802, 192.5)
+texture = ExtResource("4_8w6wl")
+
+[node name="bg" type="Sprite2D" parent="Node3D/Stage"]
+visible = false
+self_modulate = Color(47.3412, 0.588235, 3.54902, 1)
+z_index = -101
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_hxmnw")
+position = Vector2(997, 60)
+texture = ExtResource("6_7dp2p")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Node3D/Stage"]
+transform = Transform3D(200, 0, 0, 0, -9.78592, 23.5973, 0, -23.5973, -9.78592, 0, -13.209, -2.272)
+material_override = ExtResource("7_prkwy")
+lod_bias = 0.001
+radial_segments = 100
+rings = 100
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Node3D/Stage/CSGSphere3D"]
+transform = Transform3D(0.005, 0, 0, 0, 0.0391451, -5.58794e-09, 0, 5.58794e-09, 0.0391451, 0, -0.116, 0.562)
+light_color = Color(0.768627, 0.113725, 0, 1)
+light_energy = 16.0
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 16.0
+light_size = 1.0
+light_specular = 5.981
+spot_range = 12.601
+spot_angle = 65.34
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Node3D"]
+transform = Transform3D(-0.996917, -0.078459, 0, 0.0729997, -0.927549, 0.366501, -0.0287553, 0.365371, 0.930418, 0, 0, 0)
+light_color = Color(0.482353, 0.443137, 0.878431, 1)
+light_energy = 4.116
+light_indirect_energy = 1.449
+light_volumetric_fog_energy = 1.449
+light_angular_distance = 2.52
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D"]
+environment = SubResource("Environment_qegp2")
+
+[node name="BG" type="Sprite2D" parent="."]
+modulate = Color(0.792157, 0.258824, 0.505882, 1)
+self_modulate = Color(0.988235, 1, 1, 1)
+z_index = -99
+texture_filter = 1
+position = Vector2(205, 121.847)
+scale = Vector2(2.465, 1)
+texture = SubResource("ViewportTexture_117c6")
+
+[node name="depths2" type="Sprite2D" parent="."]
+z_index = -98
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_hxmnw")
+position = Vector2(216, 144)
+texture = ExtResource("6_yxbtv")
+
+[node name="Title" type="Sprite2D" parent="."]
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_xc0or")
+position = Vector2(247, 120)
+texture = ExtResource("7_rh45l")
+
+[node name="Start" type="Sprite2D" parent="."]
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_htcuy")
+position = Vector2(216, 163.5)
+texture = ExtResource("8_eu8xx")
+hframes = 10
+
+[node name="sfx" type="AudioStreamPlayer2D" parent="Start"]
+position = Vector2(-216, -163.5)
+stream = ExtResource("9_32qa0")
+volume_db = -10.0
+
+[node name="Quit" type="Sprite2D" parent="."]
+z_index = -98
+texture_filter = 1
+material = SubResource("CanvasItemMaterial_n7lim")
+position = Vector2(216, 207.5)
+texture = ExtResource("9_ey5l0")
+hframes = 10
+
+[node name="sfx" type="AudioStreamPlayer2D" parent="Quit"]
+position = Vector2(-216, -163.5)
+stream = ExtResource("9_32qa0")
+volume_db = -10.0
+
+[node name="black" type="Sprite2D" parent="."]
+z_index = 99
+position = Vector2(186, 114)
+scale = Vector2(8.84, 7.8)
+texture = SubResource("GradientTexture2D_xremn")

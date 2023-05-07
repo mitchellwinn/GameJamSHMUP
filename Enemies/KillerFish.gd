@@ -24,32 +24,34 @@ func _physics_process(delta):
 	if frame%20==0&&n<1:
 		n+=1
 		spawn(wave,startPos+Vector2(0,-3))
-	global_position+= Vector2(-1.25,0)
+	if !$Stats.dead:
+		global_position+= Vector2(-1.25,0)
 	if(frame<0):
 		visible = false
 	else:
 		visible = true
 	if(frame>0):
-		print("time:"+str(time))
+		#print("time:"+str(time))
 		time+=(2.0/144)*.5
-		print("time:"+str(time))
+		#print("time:"+str(time))
 	if(time<1):
 		value+=(1.0/144)*.5
 	else:
 		value-=(1.0/144)*.5
 	if value<=0:
 		value = 0
-	print("value:"+str(value))
-	if(time<1):
-		$Path2D/PathFollow2D.progress_ratio = lerpf($Path2D/PathFollow2D.progress_ratio,value*height,value)
-	else:
-		$Path2D/PathFollow2D.progress_ratio = lerpf($Path2D/PathFollow2D.progress_ratio,value*height,1-value)
+	#print("value:"+str(value))
+	if !$Stats.dead:
+		if(time<1):
+			$Path2D/PathFollow2D.progress_ratio = lerpf($Path2D/PathFollow2D.progress_ratio,value*height,value)
+		else:
+			$Path2D/PathFollow2D.progress_ratio = lerpf($Path2D/PathFollow2D.progress_ratio,value*height,1-value)
 	if get_node("Path2D/PathFollow2D").progress_ratio==0:
 		spawn(wave,global_position+Vector2(0,-6))
-		print("underwater")
+		#print("underwater")
 		queue_free()
 func spawn(obj,pos):
-	print("Spawn "+obj.get_name())
+	#print("Spawn "+obj.get_name())
 	var thisObj = obj.instantiate()
 	get_parent().add_child(thisObj)
 	thisObj.global_position = pos
@@ -62,7 +64,15 @@ func _on_visible_on_screen_notifier_2d_screen_exited():
 
 
 func _on_area_2d_area_entered(area):
-	print (area.collision_layer)
+	#print (area.collision_layer)
+	if $Stats.dead:
+		return
 	if area.collision_layer==2:#bullet
 		$Stats.HP-=area.get_parent().damage
 		area.get_parent().explode()
+		
+func die():
+	Help.spawn("biggerExplode",$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-0,-0))
+	Help.spawn("energyPickup",$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-0,-0))
+	await get_tree().create_timer(.2).timeout
+	queue_free()

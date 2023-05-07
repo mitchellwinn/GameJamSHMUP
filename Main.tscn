@@ -1,44 +1,16 @@
-[gd_scene load_steps=31 format=3 uid="uid://dc0r58am0tjyu"]
+[gd_scene load_steps=37 format=3 uid="uid://dc0r58am0tjyu"]
 
 [ext_resource type="Script" path="res://Scripts/Level.gd" id="1_3mjdj"]
-[ext_resource type="Texture2D" uid="uid://cf7jfdbhjpxbs" path="res://Sprites/girl1-Sheet.png" id="1_mmoas"]
-[ext_resource type="Script" path="res://Scripts/CharMain.gd" id="1_pmppb"]
 [ext_resource type="Script" path="res://Planet.gd" id="3_k8okg"]
 [ext_resource type="Texture2D" uid="uid://bcijj8wa812dk" path="res://Sprites/earthmab.png" id="3_vmtxk"]
 [ext_resource type="Texture2D" uid="uid://bocfxax215324" path="res://Sprites/Hubble_ultra_deep_field.png" id="4_avtk6"]
 [ext_resource type="Texture2D" uid="uid://dywjot18dblqh" path="res://Sprites/uiWIndow.png" id="4_rx3s6"]
-[ext_resource type="Texture2D" uid="uid://56wy5ev0fwr4" path="res://Sprites/energySheet.png" id="4_useod"]
-[ext_resource type="Texture2D" uid="uid://bf1phu23j87wu" path="res://Sprites/energySheet2.png" id="5_xe6hy"]
 [ext_resource type="Texture2D" uid="uid://poocuv7we3uo" path="res://Sprites/energyBarSHeet.png" id="6_67fce"]
 [ext_resource type="Texture2D" uid="uid://boxfp8gcgliii" path="res://Sprites/tgz0hkhy.png" id="7_4mllc"]
 [ext_resource type="Texture2D" uid="uid://2q4r1qqlkgnj" path="res://Sprites/skyover.png" id="7_384ow"]
-[ext_resource type="Material" uid="uid://yp47lfscak6w" path="res://Scripts/water_test1(1).tres" id="7_x3kwd"]
 [ext_resource type="FontFile" uid="uid://bh35l8wkc2etl" path="res://ARCADECLASSIC.TTF" id="8_qt78k"]
+[ext_resource type="Texture2D" uid="uid://b3or8euoyc81x" path="res://Sprites/hearts-Sheet.png" id="9_7ecj7"]
 [ext_resource type="Texture2D" uid="uid://dqt3eb15nqvof" path="res://Sprites/NicePng_free-cloud-png_4006927.png" id="9_i6nvp"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_pur2c"]
-size = Vector2(3, 3)
-
-[sub_resource type="Animation" id="Animation_kqm0m"]
-resource_name = "default"
-length = 0.4
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.0001, 0.1, 0.2, 0.3, 0.4),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [2, 0, 1, 2, 3, 4]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_hudfu"]
-_data = {
-"default": SubResource("Animation_kqm0m")
-}
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_lietf"]
 viewport_path = NodePath("Node3D/SubViewport")
@@ -57,6 +29,12 @@ spacing_glyph = 1
 default_font = SubResource("FontVariation_3eagv")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u00mv"]
+
+[sub_resource type="Gradient" id="Gradient_ixm5x"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rvv8k"]
+gradient = SubResource("Gradient_ixm5x")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_45o7b"]
 size = Vector2(447, 10)
@@ -80,6 +58,176 @@ blend_mode = 1
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4nv84"]
 
+[sub_resource type="Shader" id="Shader_bva0x"]
+code = "shader_type spatial;
+
+//Base material properties
+uniform vec3 albedo1 : source_color;
+uniform vec3 albedo2 : source_color;
+uniform float metallic : hint_range(0.0, 1.0) = 0;
+uniform float roughness : hint_range(0.0, 1.0) = .02;
+
+//Samplers
+uniform sampler2D wave;
+uniform sampler2D texture_normal1;
+uniform sampler2D texture_normal2;
+uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear_mipmap;
+uniform sampler2D SCREEN_TEXTURE : hint_depth_texture, filter_linear_mipmap;
+
+//Water stuff
+uniform vec2 wave_direction = vec2(2.0, 0.0);
+uniform vec2 wave_direction2 = vec2(0.0, 1.0);
+uniform float time_scale : hint_range(0.0, .2, .005) = .025;
+uniform float noise_scale : hint_range(0.0, 25.0) = 10.0;
+uniform float height_scale : hint_range(0.0, 1.0) = .15;
+
+//Depth
+uniform vec4 color_deep : source_color;
+uniform vec4 color_shallow : source_color;
+uniform float beers_law = 2.0;
+uniform float depth_offset = -.75;
+
+//Edge
+uniform float edge_scale = .1;
+uniform float near = 1.0;
+uniform float far = 100;
+uniform vec3 edge_color : source_color;
+
+// Varying.
+varying float height;
+varying vec3 world_pos;
+
+float fresnel(float amount, vec3 normal, vec3 view) {
+	return pow((1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0)), amount);
+}
+
+float edge(float depth) {
+	depth = 2.0 * depth - 1.0;
+	return near * far / (far + depth * (near - far));
+}
+
+void vertex() {
+	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	height = texture(wave, world_pos.xz / noise_scale + TIME * time_scale).r;
+	VERTEX.y += height * height_scale;
+}
+
+void fragment() {
+	// Depth variables and calc
+	float depth_texture = texture(DEPTH_TEXTURE, SCREEN_UV).r * 2.0 - 1.0;
+	float depth = PROJECTION_MATRIX[3][2] / depth_texture + PROJECTION_MATRIX[2][2];
+	float depth_blend = exp((depth + VERTEX.z + depth_offset) * -beers_law);
+	float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
+	
+	vec3 screen_color = textureLod(SCREEN_TEXTURE, SCREEN_UV, depth_blend_power * 2.5).rgb;
+	vec3 depth_color = mix(color_shallow.rgb, color_deep.rgb, depth_blend_power);
+	vec3 color = mix(screen_color * depth_color, depth_color * .225, depth_blend_power * .5);
+	
+	// Edge depth calc
+	float z_depth = edge(texture(DEPTH_TEXTURE, SCREEN_UV).x);
+	float z_pos = edge(FRAGCOORD.z);
+	float z_dif = z_depth - z_pos;
+	
+	
+	// Time calcs for wave (normal map) movement.
+	vec2 time = TIME * wave_direction * time_scale;  //Movement rate of first wave.
+	vec2 time2 = TIME * wave_direction2 * time_scale;  //Movement rate of second wave.
+	
+	// Blend normal maps into one.
+	vec3 normal_blend = mix(texture(texture_normal1, world_pos.xz/noise_scale + time).rgb, texture(texture_normal2, world_pos.xz/noise_scale + time2).rgb, 0.5);
+	
+	// Calc Fresnel.
+	float fresnel = fresnel(5.0, NORMAL, VIEW);
+	vec3 surface_color = mix(albedo1, albedo2, fresnel); //Interpolate albedo values by fresnel
+	
+	// Edge color
+	vec3 depth_color_adj = mix(edge_color, color, step(edge_scale, z_dif));
+	
+	ALBEDO = clamp(surface_color + depth_color_adj, vec3(0.0), vec3(1.0));
+	METALLIC = metallic;
+	ROUGHNESS = roughness;
+	NORMAL_MAP = normal_blend;
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_5llis"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.586402, 0.917847)
+colors = PackedColorArray(0.488599, 0.187462, 4.81308e-08, 1, 0.595024, 0.609598, 0.81952, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jqad6"]
+noise_type = 0
+seed = 379
+frequency = 0.017
+fractal_type = 2
+fractal_lacunarity = 1.989
+fractal_gain = 0.565
+cellular_distance_function = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ivg2a"]
+seamless = true
+as_normal_map = true
+bump_strength = 32.0
+color_ramp = SubResource("Gradient_5llis")
+noise = SubResource("FastNoiseLite_jqad6")
+
+[sub_resource type="Gradient" id="Gradient_m2u52"]
+offsets = PackedFloat32Array(0, 0.135977, 0.354108, 0.407932, 0.526912)
+colors = PackedColorArray(0, 0, 0, 1, 0.0384136, 0.0384136, 0.0384136, 1, 0.0424929, 0.0424929, 0.0424929, 1, 0.0420161, 0.0420161, 0.0420161, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_84enq"]
+frequency = 0.048
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gtwde"]
+seamless = true
+as_normal_map = true
+bump_strength = 1.7
+normalize = false
+color_ramp = SubResource("Gradient_m2u52")
+noise = SubResource("FastNoiseLite_84enq")
+
+[sub_resource type="Gradient" id="Gradient_myr0r"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.725212, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.529412, 0.576471, 0.964706, 0, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_iujpk"]
+noise_type = 3
+frequency = 0.016
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lsmok"]
+invert = true
+in_3d_space = true
+seamless = true
+seamless_blend_skirt = 0.135
+normalize = false
+color_ramp = SubResource("Gradient_myr0r")
+noise = SubResource("FastNoiseLite_iujpk")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_js74x"]
+render_priority = 0
+shader = SubResource("Shader_bva0x")
+shader_parameter/albedo1 = Color(0.960784, 0.541176, 0.572549, 1)
+shader_parameter/albedo2 = Color(0.619608, 0.207843, 1, 1)
+shader_parameter/metallic = 0.231
+shader_parameter/roughness = 0.004
+shader_parameter/wave_direction = Vector2(20, 1)
+shader_parameter/wave_direction2 = Vector2(30, 1)
+shader_parameter/time_scale = 0.005
+shader_parameter/noise_scale = 6.683
+shader_parameter/height_scale = 0.185
+shader_parameter/color_deep = Color(1, 0.501961, 0.521569, 1)
+shader_parameter/color_shallow = Color(0.886275, 0, 0.45098, 1)
+shader_parameter/beers_law = 1.377
+shader_parameter/depth_offset = 1.512
+shader_parameter/edge_scale = 0.234
+shader_parameter/near = 1.0
+shader_parameter/far = 99.949
+shader_parameter/edge_color = Color(0, 0, 0, 1)
+shader_parameter/wave = SubResource("NoiseTexture2D_lsmok")
+shader_parameter/texture_normal1 = SubResource("NoiseTexture2D_ivg2a")
+shader_parameter/texture_normal2 = SubResource("NoiseTexture2D_gtwde")
+
 [sub_resource type="Environment" id="Environment_hin1o"]
 ambient_light_source = 2
 ambient_light_color = Color(0.870588, 0.431373, 0.00392157, 0.356863)
@@ -98,83 +246,8 @@ point_count = 10
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_3mjdj")
 
-[node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(97, 63)
-motion_mode = 1
-script = ExtResource("1_pmppb")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-position = Vector2(-0.5, 0.5)
-shape = SubResource("RectangleShape2D_pur2c")
-metadata/_edit_lock_ = true
-
-[node name="Girl" type="Sprite2D" parent="Player"]
-texture_filter = 1
-texture = ExtResource("1_mmoas")
-hframes = 8
-vframes = 4
-frame = 25
-metadata/_edit_lock_ = true
-
-[node name="Pack" type="Sprite2D" parent="Player"]
-z_index = -4
-texture_filter = 1
-texture = ExtResource("1_mmoas")
-hframes = 8
-vframes = 4
-metadata/_edit_lock_ = true
-
-[node name="Energy1" type="Sprite2D" parent="Player/Pack"]
-z_index = -5
-position = Vector2(-9, -1)
-texture = ExtResource("4_useod")
-hframes = 5
-frame = 4
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Pack/Energy1"]
-speed_scale = 2.0
-method_call_mode = 1
-libraries = {
-"": SubResource("AnimationLibrary_hudfu")
-}
-
-[node name="Energy2" type="Sprite2D" parent="Player/Pack"]
-z_index = -5
-position = Vector2(5, -2)
-texture = ExtResource("5_xe6hy")
-hframes = 5
-frame = 4
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Pack/Energy2"]
-speed_scale = 2.0
-method_call_mode = 1
-libraries = {
-"": SubResource("AnimationLibrary_hudfu")
-}
-
-[node name="Gun" type="Sprite2D" parent="Player"]
-z_index = -2
-texture_filter = 1
-texture = ExtResource("1_mmoas")
-hframes = 8
-vframes = 4
-frame = 16
-metadata/_edit_lock_ = true
-
-[node name="Hands" type="Sprite2D" parent="Player"]
-z_index = -3
-texture_filter = 1
-texture = ExtResource("1_mmoas")
-hframes = 8
-vframes = 4
-frame = 8
-metadata/_edit_lock_ = true
-
-[node name="SpawnShot" type="Node2D" parent="Player"]
-position = Vector2(20.647, -3)
-
 [node name="BG" type="Sprite2D" parent="."]
-self_modulate = Color(0.988235, 1, 1, 1)
+self_modulate = Color(1, 0.517647, 1, 1)
 z_index = -99
 texture_filter = 1
 position = Vector2(216, 121.5)
@@ -188,7 +261,7 @@ position = Vector2(216, 120)
 texture = ExtResource("4_rx3s6")
 
 [node name="Energy" type="Sprite2D" parent="UI"]
-position = Vector2(80, -106)
+position = Vector2(80.754, -105.378)
 texture = ExtResource("6_67fce")
 hframes = 25
 
@@ -206,6 +279,17 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_u00mv")
 bbcode_enabled = true
 text = "[center]000000[center]"
 scroll_active = false
+
+[node name="Health" type="Sprite2D" parent="UI"]
+position = Vector2(-96.511, -95)
+texture = ExtResource("9_7ecj7")
+hframes = 9
+
+[node name="black" type="Sprite2D" parent="UI"]
+z_index = 99
+position = Vector2(-2, 114)
+scale = Vector2(8.84, 7.8)
+texture = SubResource("GradientTexture2D_rvv8k")
 
 [node name="Boundaries" type="StaticBody2D" parent="."]
 
@@ -297,14 +381,14 @@ texture = ExtResource("9_i6nvp")
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="Node3D/Level_0"]
 transform = Transform3D(200, 0, 0, 0, -9.78592, 23.5973, 0, -23.5973, -9.78592, 0, -13.209, -2.272)
-material_override = ExtResource("7_x3kwd")
+material_override = SubResource("ShaderMaterial_js74x")
 lod_bias = 0.001
 radial_segments = 100
 rings = 100
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Node3D/Level_0/CSGSphere3D"]
 transform = Transform3D(0.005, 0, 0, 0, 0.0391451, -5.58794e-09, 0, 5.58794e-09, 0.0391451, 0, -0.116, 0.562)
-light_color = Color(0.768627, 0.113725, 0, 1)
+light_color = Color(0.713726, 0.231373, 0, 1)
 light_energy = 16.0
 light_indirect_energy = 16.0
 light_volumetric_fog_energy = 16.0
