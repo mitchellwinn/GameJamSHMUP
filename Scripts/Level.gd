@@ -8,7 +8,10 @@ var score = 0
 
 var rng= RandomNumberGenerator.new()
 var urchin = preload("res://Enemies/Urchin.tscn")
+var dolphin = preload("res://Enemies/Dolphin.tscn")
 var killerFish = preload("res://Enemies/KillerFish.tscn")
+var diver = preload("res://Enemies/Diver.tscn")
+
 var player = preload("res://Player.tscn")
 
 
@@ -48,24 +51,30 @@ func spawn(obj,pos):
 	thisObj.global_position = pos
 	
 func enemySpawns():
+	if frame == 144*60*4:#4 mins boss
+			spawn(diver,$OceanSpawns.get_curve().get_point_position(5)+$OceanSpawns.global_position)
+	if frame >= 144*60*4:
+		return
+	if frame%(144*(8)) == 144*(8)-1:#8 seconds in
+			spawn(dolphin,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 	if frame%(144*(5)) == 144*(5)-1:#5 seconds in
 			spawn(urchin,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
 	if frame%(144*(3)) == 144*(3)-1 && rng.randf_range(0,1)>.6:#3 seconds in
-			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 			await get_tree().create_timer(.2).timeout
-			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 			await get_tree().create_timer(.2).timeout
-			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 			await get_tree().create_timer(.2).timeout
-			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 			await get_tree().create_timer(.2).timeout
-			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 			await get_tree().create_timer(.2).timeout
-			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 			await get_tree().create_timer(.2).timeout
-			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 			await get_tree().create_timer(.2).timeout
-			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
+			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(4,6))+$OceanSpawns.global_position)
 			await get_tree().create_timer(.2).timeout
 			spawn(killerFish,$OceanSpawns.get_curve().get_point_position(rng.randi_range(0,9))+$OceanSpawns.global_position)
 			

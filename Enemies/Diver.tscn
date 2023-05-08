@@ -1,0 +1,111 @@
+[gd_scene load_steps=7 format=3 uid="uid://df4qvo5recnbn"]
+
+[ext_resource type="Script" path="res://Enemies/Diver.gd" id="1_molxr"]
+[ext_resource type="Texture2D" uid="uid://c1danbhsu3hw2" path="res://Sprites/aquagUY.png" id="2_niqay"]
+[ext_resource type="Script" path="res://Scripts/EnemyStats.gd" id="3_7q2tr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q7xrf"]
+size = Vector2(95.9996, 102)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3gjwf"]
+size = Vector2(65, 37.9999)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oorrv"]
+size = Vector2(50.9999, 30.0001)
+
+[node name="Diver" type="Node2D"]
+position = Vector2(0, -1)
+script = ExtResource("1_molxr")
+
+[node name="Head" type="Sprite2D" parent="."]
+z_index = -50
+z_as_relative = false
+texture_filter = 1
+position = Vector2(-113, -84.4992)
+texture = ExtResource("2_niqay")
+vframes = 5
+frame = 3
+
+[node name="Area2D" type="Area2D" parent="Head"]
+position = Vector2(83, -0.000296831)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Head/Area2D"]
+position = Vector2(0.999985, -5)
+shape = SubResource("RectangleShape2D_q7xrf")
+metadata/_edit_lock_ = true
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource("3_7q2tr")
+HP = 2000
+
+[node name="Body" type="Sprite2D" parent="."]
+z_index = -51
+z_as_relative = false
+texture_filter = 1
+position = Vector2(-113, -84.4992)
+texture = ExtResource("2_niqay")
+vframes = 5
+frame = 1
+
+[node name="Area2D" type="Area2D" parent="Body"]
+position = Vector2(109, 75.9996)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Area2D"]
+position = Vector2(0.999985, -5)
+shape = SubResource("RectangleShape2D_q7xrf")
+metadata/_edit_lock_ = true
+
+[node name="LeftArm" type="Sprite2D" parent="."]
+z_index = -52
+z_as_relative = false
+texture_filter = 1
+position = Vector2(-113, -84.4992)
+texture = ExtResource("2_niqay")
+vframes = 5
+
+[node name="Area2D" type="Area2D" parent="LeftArm"]
+position = Vector2(-50.9997, 82.0002)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftArm/Area2D"]
+position = Vector2(-11.4999, 3.99995)
+shape = SubResource("RectangleShape2D_3gjwf")
+metadata/_edit_lock_ = true
+
+[node name="RightArm" type="Sprite2D" parent="."]
+z_index = -50
+z_as_relative = false
+texture_filter = 1
+position = Vector2(-113, -84.4992)
+texture = ExtResource("2_niqay")
+vframes = 5
+frame = 2
+
+[node name="Area2D" type="Area2D" parent="RightArm"]
+position = Vector2(69.0003, 91.9998)
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightArm/Area2D"]
+position = Vector2(-14.5, 16.0001)
+shape = SubResource("RectangleShape2D_oorrv")
+metadata/_edit_lock_ = true
+
+[node name="Weed" type="Sprite2D" parent="."]
+z_index = -49
+z_as_relative = false
+texture_filter = 1
+position = Vector2(-113, -84.4992)
+texture = ExtResource("2_niqay")
+vframes = 5
+frame = 4
+
+[connection signal="area_entered" from="Head/Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_entered" from="Body/Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_entered" from="LeftArm/Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_entered" from="RightArm/Area2D" to="." method="_on_area_2d_area_entered"]

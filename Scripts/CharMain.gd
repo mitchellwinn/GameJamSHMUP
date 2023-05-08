@@ -60,7 +60,7 @@ func _physics_process(delta):
 	if down:
 		velocity.y += 144
 	shoot()
-	velocity = velocity.normalized()*144
+	velocity = velocity.normalized()*144*($Stats.currentENERGY/17+.9)
 	move_and_slide()
 	
 func shoot():
@@ -151,15 +151,26 @@ func animate(delta):
 
 
 func _on_area_2d_area_entered(area):
-	if area.collision_layer==4 && !area.get_parent().get_parent().get_parent().get_parent().get_node("Stats").dead:
-		if $Stats.infFrames>0:
-			print ("infFrames:"+str($Stats.infFrames))
-			return
-		$Stats.currentHP-=1
-		$Stats.infFrames=.75
+	if area.collision_layer==4:
+		if area.get_parent().get_parent().get_parent().get_parent().get_node("Stats"):
+			if !area.get_parent().get_parent().get_parent().get_parent().get_node("Stats").dead:
+				if $Stats.infFrames>0:
+					print ("infFrames:"+str($Stats.infFrames))
+					return
+				$Stats.currentHP-=1
+				$Stats.infFrames=.75
+				get_parent().get_node("UI/Face/AnimationPlayer").play("hurt")
+		elif area.get_parent().get_parent().get_node("Stats"):
+			if !area.get_parent().get_parent().get_node("Stats").dead:
+				if $Stats.infFrames>0:
+					print ("infFrames:"+str($Stats.infFrames))
+					return
+				$Stats.currentHP-=1
+				$Stats.infFrames=.75
+				get_parent().get_node("UI/Face/AnimationPlayer").play("hurt")
 	elif area.collision_layer==16:
 		area.get_parent().queue_free()
-		get_parent().score+=2
+		get_node("/root/Node2D").score+=2
 		$Stats.currentENERGY+=1
 	else:
 		print("badLayer")

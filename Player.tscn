@@ -64,7 +64,7 @@ z_index = -5
 position = Vector2(-9, -1)
 texture = ExtResource("3_ng02d")
 hframes = 5
-frame = 4
+frame = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Pack/Energy1"]
 speed_scale = 2.0

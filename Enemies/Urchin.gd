@@ -6,13 +6,13 @@ var n = 0
 var startPos = Vector3.ZERO
 var points  = 30
 
-
+var area
 var wave = preload("res://Particles/Wave.tscn")
 var energy = preload("res://Particles/energyPickup.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	area = $Path2D/PathFollow2D/Sprite2D/Area2D
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -27,8 +27,12 @@ func _physics_process(delta):
 	if !$Stats.dead:
 		global_position+= Vector2(-.25,0)
 	if(frame<80):
+		area.monitorable = false
+		area.monitoring = false
 		visible = false
 	else:
+		area.monitorable = true
+		area.monitoring = true
 		visible = true
 	if !$Stats.dead:
 		if(frame>144):
@@ -81,25 +85,25 @@ func die():
 	###thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-10,0))
 	#thisenergy.linear_velocity = Vector2(-10,0)*6
 	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-5,0))
-	thisenergy.linear_velocity = Vector2(-5,0)*5.5
+	thisenergy.linear_velocity = Vector2(5,0)*5.5
+	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-3,0))
+	thisenergy.linear_velocity = Vector2(-3,0)*5
+	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(3,0))
+	thisenergy.linear_velocity = Vector2(-3,0)*4.5
+	#thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(5,0))
+	#thisenergy.linear_velocity = Vector2(5,0)*4
+	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position++Vector2(10,0))
+	thisenergy.linear_velocity = Vector2(-10,0)*3.5
+	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-10,0))
+	thisenergy.linear_velocity = Vector2(-10,0)*6
+	#thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-5,0))
+	#thisenergy.linear_velocity = Vector2(5,0)*5.5
 	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-3,0))
 	thisenergy.linear_velocity = Vector2(-3,0)*5
 	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(3,0))
 	thisenergy.linear_velocity = Vector2(3,0)*4.5
-	#thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(5,0))
-	#thisenergy.linear_velocity = Vector2(5,0)*4
-	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position++Vector2(10,0))
-	thisenergy.linear_velocity = Vector2(10,0)*3.5
-	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-10,0))
-	thisenergy.linear_velocity = Vector2(10,0)*6
-	#thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-5,0))
-	#thisenergy.linear_velocity = Vector2(5,0)*5.5
-	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(-3,0))
-	thisenergy.linear_velocity = Vector2(3,0)*5
-	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(3,0))
-	thisenergy.linear_velocity = Vector2(-3,0)*4.5
 	thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position+Vector2(5,0))
-	thisenergy.linear_velocity = Vector2(-5,0)*4
+	thisenergy.linear_velocity = Vector2(5,0)*4
 	#thisenergy = spawn(energy,$Path2D/PathFollow2D/Sprite2D.global_position++Vector2(10,0))
 	#thisenergy.linear_velocity = Vector2(-10,0)*3.5
 	

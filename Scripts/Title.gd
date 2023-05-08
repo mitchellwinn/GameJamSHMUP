@@ -41,8 +41,18 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	frame+=1
-	if selected:
-			return
+	if selected&&menuSelection==0:
+		if frame%8<4:
+			$Start.visible = false
+		else:
+			$Start.visible = true
+		return
+	if selected&&menuSelection==1:
+		if frame%8<4:
+			$Quit.visible = false
+		else:
+			$Quit.visible = true
+		return
 	if menuSelection>1:
 		menuSelection = 0
 	elif menuSelection<0:

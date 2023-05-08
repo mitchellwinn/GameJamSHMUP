@@ -11,10 +11,10 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	if dead:
-		if get_parent().frame%8<4:
-			get_parent().get_node("Path2D/PathFollow2D/Sprite2D").visible = false
-		else:
-			get_parent().get_node("Path2D/PathFollow2D/Sprite2D").visible = true
+			if get_parent().frame%8<4:
+				get_parent().modulate= Color(1,1,1,0.1)
+			else:
+				get_parent().modulate= Color(1,1,1,1)
 	if(HP<=0&&!dead):
 		dead = true
 		print("die")
